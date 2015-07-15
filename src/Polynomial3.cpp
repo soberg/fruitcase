@@ -461,6 +461,14 @@ Polynomial3 Polynomial3::power(int e) const
 // returns the first non-zero monomial x^i y^j z^k with (i,j,k)
 // lexicographically maximal
 // returns true if polynomial is non zero, false otherwise
+/*!
+    Returns the first non-zero monomial x^i y^j z^k with (i,j,k)
+    lexicographically maximal
+    @param index i for variable x (written to)
+    @param index j for variable y (written to)
+    @param index k for variable k (written to)
+    @return 1 if polynomial is non-zero, 0 otherwise
+*/
 bool Polynomial3::lexicLeadTerm(int& i, int& j, int& k) const
 {
     for(i=DEFAULT_POLYNOMIAL_VAR_DEGREE; i >=0; --i)
@@ -622,9 +630,15 @@ Polynomial3 resultant( const Polynomial3& p, const Polynomial3& q)
     return r;
 }
 
-// Given two polynomials f and g this function calculates
-// q,r such that f=q*g+r
-// return value 0 if r!=0, 1 otherwise
+/*!
+    Given two polynomials f and g this function calculates
+    * q,r such that f=q*g+r
+    @param polynomial f (const)
+    @param polynomial g (const)
+    @param polynomial q (written to)
+    @param polynomial r (written to)
+    @return 0 r!=0  and 1 otherwise(g divides f).
+*/
 bool poldiv(const Polynomial3& f, const Polynomial3& g, Polynomial3& q, Polynomial3& r)
 {
     // Algorithm is as follows:
@@ -669,8 +683,9 @@ bool poldiv(const Polynomial3& f, const Polynomial3& g, Polynomial3& q, Polynomi
         }
         
         if( !p.lexicLeadTerm(px,py,pz) ) // update indices for the lead coefficient
+										 // if p==0 we are done!
         {
-            break;
+            break;	// we're done!
         }
     }
     return f_divides_g;

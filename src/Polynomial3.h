@@ -27,6 +27,10 @@ DEFAULT_POLYNOMIAL_LENGTH*DEFAULT_POLYNOMIAL_LENGTH*DEFAULT_POLYNOMIAL_LENGTH;
 
 const Monomial3 POL3_VARS[4] = { VAR_X, VAR_Y, VAR_Z, VAR_CONST };
 
+//!  A runtime-sensitive class for 3-variate polynomials. 
+/*!
+  A more elaborate class description.
+*/
 class Polynomial3
 {
 public:
