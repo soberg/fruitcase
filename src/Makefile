@@ -14,10 +14,10 @@ CXXFLAGS =  -Wp,-MMD,$*.dep \
 #SOPLEX_INC   = -I../soplex-1.7.0/src
 #SOPLEX_LIB = -L../soplex-1.7.0/lib -lsoplex -lgmp -lz 
 
-PM_INC := $(shell /store/borel/lorenz/cluster/prefix/bin/polymake-config --includes)
-PM_CFLAGS := -fPIC -DPOLYMAKE_DEBUG=0
-PM_LIBS := $(shell /store/borel/lorenz/cluster/prefix/bin/polymake-config --libs) 
-PM_LDFLAGS := $(shell /store/borel/lorenz/cluster/prefix/bin/polymake-config --ldflags) 
+#PM_INC := $(shell /store/borel/lorenz/cluster/prefix/bin/polymake-config --includes)
+#PM_CFLAGS := -fPIC -DPOLYMAKE_DEBUG=0
+#PM_LIBS := $(shell /store/borel/lorenz/cluster/prefix/bin/polymake-config --libs)
+#PM_LDFLAGS := $(shell /store/borel/lorenz/cluster/prefix/bin/polymake-config --ldflags)
 
 CFLAGS     = -O3 -Wall -fno-strict-aliasing -pg
 
@@ -25,17 +25,28 @@ OBJ = main.o error.o helper.o aabox.o polytope.o densest_lattice_packing.o numer
 
 OBJ_RAND = randomize.o error.o helper.o aabox.o polytope.o densest_lattice_packing.o numerics.o linear_programming.o admissibleLattice.o LPSolver.o Matrix.o Vector.o Polynomial3.o Minima.o
 
-LDFLAGS = -L/homes/combi/berg/Cluster/densestlatticepackings/PARI/lib
+OBJ_ROOT_CASE = main_wip_test.o linear_factor.o Polynomial3.o helper.o
+
+LDFLAGS = -L../pari-2.7.4/Odarwin-i386
 LIB = -ldl -lm -lc -L/usr/local/lib -lpari 
 #$(SOPLEX_LIB)
-INC =  -I. -I/homes/combi/berg/Cluster/densestlatticepackings/PARI/include ${PM_INC}
+INC =  -I. -I../pari-2.7.4/src/headers ${PM_INC}
 #$(SOPLEX_INC)
 
 densest_lattice_packings: $(OBJ)
 	$(CXX) -o $@ $(OBJ) ${LDFLAGS} ${PM_LDFLAGS} ${LIB} ${PM_LIBS} -Wl,--warn-unresolved-symbols ${LDFLAGS} -pg
 
+root_case_test: $(OBJ_ROOT_CASE)
+	$(CXX) -o $@ $(OBJ_ROOT_CASE) ${LDFLAGS} -Wl ${LDFLAGS} -pg
+
 main.o: main.cpp main.h
 	$(CXX) -o main.o -c -I. $(INC) ${PM_INC} ${PM_CFLAGS} ${CFLAGS} main.cpp
+
+main_wip_test.o: main_wip_test.cpp main_wip_test.h helper.o
+	$(CXX) -o main_wip_test.o -c -I. $(INC)  ${CFLAGS} main_wip_test.cpp
+
+linear_factor.o: linear_factor.cpp linear_factor.h
+	$(CXX) -o linear_factor.o -c -I. $(INC)  ${CFLAGS} linear_factor.cpp
 
 numerics.o: numerics.c numerics.h
 	$(CXX) -c $(INC) $(CFLAGS) -fPIC numerics.c
